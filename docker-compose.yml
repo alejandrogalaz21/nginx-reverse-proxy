@@ -6,17 +6,17 @@ services:
     image: "jwilder/nginx-proxy:latest"
     container_name: "reverse-proxy"
     volumes:
-      - "html:/usr/share/nginx/html"
-      - "dhparam:/etc/nginx/dhparam"
-      - "vhost:/etc/nginx/vhost.d"
-      - "certs:/etc/nginx/certs"
-      - "/run/docker.sock:/tmp/docker.sock:ro"
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - vhost:/etc/nginx/vhost.d
+      - certs:/etc/nginx/certs
+      - /run/docker.sock:/tmp/docker.sock:ro
     restart: "always"
+    ports:
+      - "80:80"
+      - "443:443"
     networks: 
         - default
-    ports:
-        - "80:80"
-        - "443:443"
 
   # nginX Config Generator
   # custom image with the following Dockerfile
@@ -31,28 +31,30 @@ services:
     volumes_from:
       - nginx
     networks: 
-        - default
+      - default
 
   # nginX LetsEncrypt SSL
-  nginx-letsencrypt: 
-    container_name: nginx-letsencrypt
+  letsencrypt: 
     depends_on:
       - nginx
       - nginx-gen
-    environment:
-      - NGINX_DOCKER_GEN_CONTAINER=nginx-gen
+    container_name: nginx-letsencrypt
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
+    environment:
+      NGINX_PROXY_CONTAINER: nginx
+      NGINX_DOCKER_GEN_CONTAINER: nginx-gen
+      DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
     restart: always
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - certs:/etc/nginx/certs:rw
-    volumes_from:
-      - nginx
+      - html:/usr/share/nginx/html
+      - dhparam:/etc/nginx/dhparam
+      - vhost:/etc/nginx/vhost.d
+      - certs:/etc/nginx/certs
+      - /run/docker.sock:/var/run/docker.sock:ro
     networks: 
-        - default
+      - default
 
-  
-   portainer_ce:
+  portainer_ce:
     container_name: portainer_ce
     image: portainer/portainer-ce:latest
     restart: unless-stopped
@@ -60,10 +62,21 @@ services:
     - 8000:8000
     - 9000:9000
     command: -H unix:///var/run/docker.sock
+    environment:
+      VIRTUAL_HOST: portainer.${DOMAIN}
+      LETSENCRYPT_HOST: portainer.${DOMAIN}
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/localtime:/etc/localtime:ro
       - portainer:/data
+  
+  whoami:
+    image: jwilder/whoami
+    environment:
+      - VIRTUAL_HOST=whoami.${DOMAIN}
+
+
 
 # External docker network (run only once)
 # docker network create -d bridge nginx-proxy
