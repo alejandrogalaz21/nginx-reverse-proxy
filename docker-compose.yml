@@ -8,7 +8,7 @@ services:
     volumes:
       - html:/usr/share/nginx/html
       - dhparam:/etc/nginx/dhparam
-      - vhost:/etc/nginx/vhost.d
+      - ./vhost.d:/etc/nginx/vhost.d
       - certs:/etc/nginx/certs
       - /run/docker.sock:/tmp/docker.sock:ro
     restart: "always"
@@ -82,6 +82,5 @@ networks:
 volumes:
   certs:
   html:
-  vhost:
   dhparam:
   portainer:
