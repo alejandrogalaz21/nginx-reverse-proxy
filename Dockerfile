@@ -1,4 +1,4 @@
-FROM jwilder/docker-gen:latest
+FROM nginxproxy/docker-gen
 COPY nginx.tmpl /etc/docker-gen/templates/nginx.tmpl
 COPY vhost.d /etc/nginx/vhost.d
 COPY htpasswd /etc/nginx/htpasswd
