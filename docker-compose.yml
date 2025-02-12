@@ -60,9 +60,12 @@ services:
     restart: always
     ports:
       - 9000:9000
+      - 9443:9443
+      - 8000:8000
     environment:
-      VIRTUAL_HOST: por.${DOMAIN}
-      LETSENCRYPT_HOST: por.${DOMAIN}
+      VIRTUAL_PORT: 9000
+      VIRTUAL_HOST: portainer.${DOMAIN}
+      LETSENCRYPT_HOST: portainer.${DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
     volumes:
       - portainer_data:/data
