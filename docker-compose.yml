@@ -55,22 +55,18 @@ services:
       - default
 
   portainer_ce:
-    container_name: portainer_ce
+    container_name: portainer
     image: portainer/portainer-ce:latest
-    restart: unless-stopped
+    restart: always
     ports:
-      - 8000:8000
       - 9000:9000
-    command: -H unix:///var/run/docker.sock
     environment:
-      VIRTUAL_HOST: portainer.${DOMAIN}
-      LETSENCRYPT_HOST: portainer.${DOMAIN}
+      VIRTUAL_HOST: por.${DOMAIN}
+      LETSENCRYPT_HOST: por.${DOMAIN}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-
     volumes:
+      - portainer_data:/data
       - /var/run/docker.sock:/var/run/docker.sock
-      - /etc/localtime:/etc/localtime:ro
-      - portainer:/data
 
   # whoami:
   #   image: jwilder/whoami
@@ -90,4 +86,4 @@ volumes:
   html:
   vhost:
   dhparam:
-  portainer:
+  portainer_data:
