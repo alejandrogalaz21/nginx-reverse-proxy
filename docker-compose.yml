@@ -43,7 +43,7 @@ services:
     environment:
       NGINX_PROXY_CONTAINER: nginx
       NGINX_DOCKER_GEN_CONTAINER: nginx-gen
-      DEFAULT_EMAIL: ${LETSENCRYPT_EMAIL}
+      DEFAULT_EMAIL: alejandrogalaz21@gmail.com
     restart: always
     volumes:
       - html:/usr/share/nginx/html
@@ -64,9 +64,9 @@ services:
       - 8000:8000
     environment:
       VIRTUAL_PORT: 9000
-      VIRTUAL_HOST: portainer.${DOMAIN}
-      LETSENCRYPT_HOST: portainer.${DOMAIN}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
+      VIRTUAL_HOST: portainer.alejandrogalaz.space
+      LETSENCRYPT_HOST: portainer.alejandrogalaz.space
+      LETSENCRYPT_EMAIL: alejandrogalaz21@gmail.com
     volumes:
       - portainer_data:/data
       - /var/run/docker.sock:/var/run/docker.sock
@@ -75,7 +75,7 @@ services:
   #   image: jwilder/whoami
   #   container_name: whoami
   #   environment:
-  #     - VIRTUAL_HOST=whoami.${DOMAIN}
+  #     - VIRTUAL_HOST=whoami.alejandrogalaz.space
 
 # External docker network (run only once)
 # docker network create -d bridge nginx-proxy
